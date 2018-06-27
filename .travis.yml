@@ -3,6 +3,10 @@ addons:
   apt:
     packages:
     - aria2
+#before_install:
+branches:
+  only:
+  - master
 
 dist: trusty
 env:
