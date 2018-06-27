@@ -20,6 +20,7 @@ env:
 
 group: edge
 install: true
+language: rust
 
 matrix:
   include:
@@ -28,6 +29,10 @@ matrix:
   - env: IMAGE_ARG_JAVA8_VERSION_MINOR=172
     env: IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08
 
+rust:
+  - stable
+
+#before_script:
 script:
 # When prefixed with `travis_wait 30`, no log output until it is done.
 # see: https://github.com/travis-ci/travis-ci/issues/4190 or https://github.com/HaxeFoundation/hxcpp/issues/709
@@ -35,6 +40,8 @@ script:
 - echo ${CI_OPT_DOCKER_REGISTRY_PASS} | docker login --password-stdin -u="${CI_OPT_DOCKER_REGISTRY_USER}" docker.io
 - docker-compose build
 - kill %1
+#after_script:
+
 services:
 - docker
 sudo: required
