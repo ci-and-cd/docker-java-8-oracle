@@ -20,5 +20,6 @@ so this variant is usually a very safe choice.
 ## Use this image as a “stage” in multi-stage builds
 
 ```dockerfile
+FROM alpine:3.7
 COPY --from=cirepo/java-8-oracle:8u171 /usr/lib/jvm/java-8-oracle /usr/lib/jvm/java-8-oracle
 ```

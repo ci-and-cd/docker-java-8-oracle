@@ -16,8 +16,10 @@ ARG IMAGE_ARG_JAVA8_PACKAGE
 ARG IMAGE_ARG_JAVA8_PACKAGE_DIGEST
 
 
+
 ENV ARIA2C_DOWNLOAD aria2c --file-allocation=none -c -x 10 -s 10 -m 0 --console-log-level=notice --log-level=notice --summary-interval=0
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
 
 
 RUN set -ex \
