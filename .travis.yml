@@ -6,28 +6,25 @@ addons:
 #before_install:
 branches:
   only:
-  - master
   - develop
+  - master
 
 dist: trusty
 env:
   global:
   - IMAGE_ARG_JAVA8_VERSION_BUILD=11
+  - IMAGE_VERSION_LATEST=8u172
   matrix:
   - IMAGE_ARG_JAVA8_VERSION_MINOR=171 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=512cd62ec5174c3487ac17c61aaa89e8
   - IMAGE_ARG_JAVA8_VERSION_MINOR=172 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08
 
 group: edge
 #install: true
-#language: rust
 
-matrix:
-  include:
-  - env: IMAGE_ARG_JAVA8_VERSION_MINOR=171 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=512cd62ec5174c3487ac17c61aaa89e8
-  - env: IMAGE_ARG_JAVA8_VERSION_MINOR=172 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08
-
-#rust:
-#- stable
+#matrix:
+#  include:
+#  - env: IMAGE_ARG_JAVA8_VERSION_MINOR=171 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=512cd62ec5174c3487ac17c61aaa89e8
+#  - env: IMAGE_ARG_JAVA8_VERSION_MINOR=172 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08
 
 #before_script:
 script:
@@ -35,7 +32,12 @@ script:
 # see: https://github.com/travis-ci/travis-ci/issues/4190 or https://github.com/HaxeFoundation/hxcpp/issues/709
 - while sleep 9m; do echo "=====[ $SECONDS seconds still running ]====="; done &
 - echo ${CI_OPT_DOCKER_REGISTRY_PASS} | docker login --password-stdin -u="${CI_OPT_DOCKER_REGISTRY_USER}" docker.io
-- docker-compose build
+- if [ "${TRAVIS_BRANCH}" == "master" ]; then export IMAGE_VERSION=8u${IMAGE_ARG_JAVA8_VERSION_MINOR}; else export IMAGE_VERSION=8u${IMAGE_ARG_JAVA8_VERSION_MINOR}-SNAPSHOT; fi
+- export IMAGE_NAME=${IMAGE_PREFIX:-cirepo}/java-8-oracle
+- export IMAGE=${IMAGE_NAME}:${IMAGE_VERSION}
+- docker build -t ${IMAGE} .
+- docker push ${IMAGE}
+- if [ "${TRAVIS_BRANCH}" == "master" ] && [ "${IMAGE_VERSION}" == "${IMAGE_VERSION_LATEST}" ]; then docker tag ${IMAGE} ${IMAGE_NAME}:latest; docker push ${IMAGE_NAME}:latest; fi
 - kill %1
 #after_script:
 
