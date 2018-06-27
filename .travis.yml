@@ -7,8 +7,26 @@ addons:
 branches:
   only:
   - master
+  - develop
 
 dist: trusty
+env:
+#  global:
+#  - IMAGE_ARG_JAVA8_VERSION_BUILD=11
+- IMAGE_ARG_JAVA8_VERSION_MINOR=171 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=512cd62ec5174c3487ac17c61aaa89e8
+- IMAGE_ARG_JAVA8_VERSION_MINOR=172 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08
+
+group: edge
+#install: true
+language: rust
+
+matrix:
+  include:
+  - env: IMAGE_ARG_JAVA8_VERSION_MINOR=171 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=512cd62ec5174c3487ac17c61aaa89e8
+    rust: stable
+  - env: IMAGE_ARG_JAVA8_VERSION_MINOR=172 IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08
+    rust: stable
+
 rust:
 - stable
 
