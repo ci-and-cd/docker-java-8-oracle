@@ -19,6 +19,7 @@ env:
 - IMAGE_ARG_JAVA8_PACKAGE_DIGEST=a58eab1ec242421181065cdc37240b08 # 172
 
 group: edge
+install: true
 
 matrix:
   include:
