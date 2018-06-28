@@ -21,5 +21,7 @@ so this variant is usually a very safe choice.
 
 ```dockerfile
 FROM alpine:3.7
+COPY --from=cirepo/alpine-glibc:3.7_2.23-r3 /data/layer.tar /data/layer.tar
+RUN tar xf /data/layer.tar -C /
 COPY --from=cirepo/java-8-oracle:8u171 /usr/lib/jvm/java-8-oracle /usr/lib/jvm/java-8-oracle
 ```
