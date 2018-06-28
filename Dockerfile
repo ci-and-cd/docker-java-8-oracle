@@ -7,7 +7,6 @@ MAINTAINER haolun
 ARG IMAGE_ARG_ALPINE_MIRROR
 ARG IMAGE_ARG_FILESERVER
 
-ARG IMAGE_ARG_GLIBC_VERSION
 # http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.tar.gz
 # http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz
 ARG IMAGE_ARG_JAVA8_VERSION_MINOR
@@ -21,23 +20,25 @@ ENV ARIA2C_DOWNLOAD aria2c --file-allocation=none -c -x 10 -s 10 -m 0 --console-
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 
+COPY --from=cirepo/alpine-glibc:3.7_2.23-r3 /data/layer.tar /data/layer.tar
+RUN tar xf /data/layer.tar -C /
+
+
 
 RUN set -ex \
     && echo ===== Install tools ===== \
+    && touch /etc/apk/repositories \
     && echo "https://${IMAGE_ARG_ALPINE_MIRROR:-dl-3.alpinelinux.org}/alpine/v3.7/main" > /etc/apk/repositories \
     && echo "https://${IMAGE_ARG_ALPINE_MIRROR:-dl-3.alpinelinux.org}/alpine/v3.7/community" >> /etc/apk/repositories \
     && echo "https://${IMAGE_ARG_ALPINE_MIRROR:-dl-3.alpinelinux.org}/alpine/edge/testing/" >> /etc/apk/repositories \
-    && apk add --update --upgrade apk-tools \
-    && apk upgrade --update \
-    && apk add aria2 bash binutils ca-certificates curl git libstdc++ openssh tar unzip wget xz \
-    && echo ===== Install glibc ===== \
-    && ${ARIA2C_DOWNLOAD} -d /tmp -o "glibc-${IMAGE_ARG_GLIBC_VERSION:-2.23-r3}.apk" "${IMAGE_ARG_FILESERVER:-https://github.com}/sgerrand/alpine-pkg-glibc/releases/download/${IMAGE_ARG_GLIBC_VERSION:-2.23-r3}/glibc-${IMAGE_ARG_GLIBC_VERSION:-2.23-r3}.apk" \
-    && apk add --allow-untrusted /tmp/glibc-${IMAGE_ARG_GLIBC_VERSION:-2.23-r3}.apk \
+    && apk add --update aria2 \
     && echo ===== Install JDK8 ===== \
     && mkdir -p $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
-        && curl -jksSLH "Cookie: oraclelicense=accept-securebackup-cookie" \
+        && ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
+        -o ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}.tar.gz \
         ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jdk/8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-b${IMAGE_ARG_JAVA8_VERSION_BUILD:-11}/${IMAGE_ARG_JAVA8_PACKAGE_DIGEST:-512cd62ec5174c3487ac17c61aaa89e8}/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-linux-x64.tar.gz \
-        | tar -xzf - -C $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
+        && tar -xzf ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}.tar.gz -C $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
+        && rm -f ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}.tar.gz \
         && mv $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle})/jdk1.8.0_${IMAGE_ARG_JAVA8_VERSION_MINOR:-171} ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle} \
         && rm -rf ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/*src.zip \
                ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/lib/missioncontrol \
@@ -60,8 +61,8 @@ RUN set -ex \
                ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/amd64/libjavafx*.so \
                ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/amd64/libjfx*.so \
     && POLICY_DIR="UnlimitedJCEPolicyJDK8" \
-    && curl -s -k -L -C - -b "oraclelicense=accept-securebackup-cookie" \
-    ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jce/8/jce_policy-8.zip > policy.zip \
+    && ${ARIA2C_DOWNLOAD} --header="oraclelicense=accept-securebackup-cookie" \
+    -o policy.zip ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jce/8/jce_policy-8.zip \
     && unzip policy.zip \
     && cp -f ${POLICY_DIR}/US_export_policy.jar ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/security/US_export_policy.jar \
     && cp -f ${POLICY_DIR}/local_policy.jar ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/security/local_policy.jar \
