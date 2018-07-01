@@ -1,10 +1,12 @@
 
-FROM alpine:3.7
+FROM cirepo/nix:2.0.4_alpine-3.7
 
 MAINTAINER haolun
 
 
-ARG IMAGE_ARG_ALPINE_MIRROR
+USER root
+
+
 ARG IMAGE_ARG_FILESERVER
 
 # http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.tar.gz
@@ -15,9 +17,7 @@ ARG IMAGE_ARG_JAVA8_PACKAGE
 ARG IMAGE_ARG_JAVA8_PACKAGE_DIGEST
 
 
-ENV ARIA2C_DOWNLOAD aria2c --file-allocation=none -c -x 10 -s 10 -m 0 --console-log-level=notice --log-level=notice --summary-interval=0
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-
 
 
 COPY --from=cirepo/alpine-glibc:3.7_2.23-r3 /data/layer.tar /data/layer.tar
@@ -25,12 +25,6 @@ RUN tar xf /data/layer.tar -C /
 
 
 RUN set -ex \
-    && echo ===== Install tools ===== \
-    && touch /etc/apk/repositories \
-    && echo "https://${IMAGE_ARG_ALPINE_MIRROR:-dl-3.alpinelinux.org}/alpine/v3.7/main" > /etc/apk/repositories \
-    && echo "https://${IMAGE_ARG_ALPINE_MIRROR:-dl-3.alpinelinux.org}/alpine/v3.7/community" >> /etc/apk/repositories \
-    && echo "https://${IMAGE_ARG_ALPINE_MIRROR:-dl-3.alpinelinux.org}/alpine/edge/testing/" >> /etc/apk/repositories \
-    && apk add --update aria2 \
     && echo ===== Install JDK8 ===== \
     && mkdir -p $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
         && ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
@@ -75,3 +69,6 @@ RUN set -ex \
 #    apt-get -q clean -y && rm -rf /var/lib/apt/lists/* && rm -f /var/cache/apt/*.bin
 
 ENV PATH ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/bin:${PATH}
+
+
+USER alpine
