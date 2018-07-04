@@ -2,7 +2,7 @@
 *
 
 # But not these files...
-!.gitignore
+!/docker/.gitignore
 # etc...
 
 # ...even if they are in subdirectories
