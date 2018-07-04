@@ -23,7 +23,7 @@ cp -f ${LAYERS[0]} $(pwd)/data/layer.tar
 
 echo find empty directories
 tar_entries=($(tar tf data/layer.tar))
-tar_directories=($(tar tf data/layer.tar | grep -E '.*/$' | grep -v '\.rvm' | sort -r -n))
+tar_directories=($(tar tf data/layer.tar | grep -E '.*/$' | grep -v 'java' | sort -r -n))
 tar_empty_directories=()
 for directory in ${tar_directories[@]}; do
     if [ -z "$(printf -- '%s\n' "${tar_entries[@]}" | grep -E "${directory}.+")" ]; then tar_empty_directories+=(${directory}); fi
