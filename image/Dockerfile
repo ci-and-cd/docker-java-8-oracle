@@ -29,7 +29,7 @@ RUN set -ex \
     && mkdir -p $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
     && if [ ! -f /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-linux-x64.tar.gz ]; then \
            ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
-           -o ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-linux-x64.tar.gz \
+           -d /data -o ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-linux-x64.tar.gz \
            ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jdk/8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-b${IMAGE_ARG_JAVA8_VERSION_BUILD:-11}/${IMAGE_ARG_JAVA8_PACKAGE_DIGEST:-512cd62ec5174c3487ac17c61aaa89e8}/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-linux-x64.tar.gz; \
        fi \
     && tar -xzf /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-linux-x64.tar.gz -C $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
