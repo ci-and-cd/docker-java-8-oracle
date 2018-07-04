@@ -58,7 +58,6 @@ RUN set -ex \
     && POLICY_DIR="UnlimitedJCEPolicyJDK8" \
     && if [ ! -f /data/jce_policy-8.zip ]; then \
            ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
-           http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
            -d /data -o jce_policy-8.zip ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jce/8/jce_policy-8.zip; \
        fi \
     && unzip /data/jce_policy-8.zip \

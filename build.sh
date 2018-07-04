@@ -7,7 +7,7 @@ docker-compose version
 
 WORK_DIR=$(pwd)
 
-#if [ -n "${CI_OPT_DOCKER_REGISTRY_PASS}" ] && [ -n "${CI_OPT_DOCKER_REGISTRY_USER}" ]; then echo ${CI_OPT_DOCKER_REGISTRY_PASS} | docker login --password-stdin -u="${CI_OPT_DOCKER_REGISTRY_USER}" docker.io; fi
+if [ -n "${CI_OPT_DOCKER_REGISTRY_PASS}" ] && [ -n "${CI_OPT_DOCKER_REGISTRY_USER}" ]; then echo ${CI_OPT_DOCKER_REGISTRY_PASS} | docker login --password-stdin -u="${CI_OPT_DOCKER_REGISTRY_USER}" docker.io; fi
 
 export IMAGE_PREFIX=${IMAGE_PREFIX:-cirepo};
 export IMAGE_NAME=${IMAGE_NAME:-java-8-oracle}
@@ -26,9 +26,9 @@ docker-compose build dumper
 ## Build archive image
 docker-compose build archive
 
-#docker-compose push image
-#if [ "${TRAVIS_BRANCH}" == "master" ] && [ "${IMAGE_TAG}" == "${IMAGE_TAG_LATEST}" ]; then
-#    docker tag ${IMAGE_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_PREFIX}/${IMAGE_NAME}:latest
-#    docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:latest
-#fi
-#docker-compose push archive
+docker-compose push image
+if [ "${TRAVIS_BRANCH}" == "master" ] && [ "${IMAGE_TAG}" == "${IMAGE_TAG_LATEST}" ]; then
+    docker tag ${IMAGE_PREFIX}/${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_PREFIX}/${IMAGE_NAME}:latest
+    docker push ${IMAGE_PREFIX}/${IMAGE_NAME}:latest
+fi
+docker-compose push archive
