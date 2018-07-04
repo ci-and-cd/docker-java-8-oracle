@@ -57,7 +57,8 @@ RUN set -ex \
            ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/amd64/libjfx*.so \
     && POLICY_DIR="UnlimitedJCEPolicyJDK8" \
     && if [ ! -f /data/jce_policy-8.zip ]; then \
-           ${ARIA2C_DOWNLOAD} --header="oraclelicense=accept-securebackup-cookie" \
+           ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
+           http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
            -d /data -o jce_policy-8.zip ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jce/8/jce_policy-8.zip; \
        fi \
     && unzip /data/jce_policy-8.zip \
