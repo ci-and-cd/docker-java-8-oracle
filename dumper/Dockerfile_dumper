@@ -1,0 +1,10 @@
+
+FROM cirepo/nix:2.0.4_alpine-3.7
+
+
+COPY --chown=alpine:alpine docker /home/alpine/data
+
+
+# Process image layers
+RUN cd /home/$(whoami) \
+  && ./data/dump.sh
