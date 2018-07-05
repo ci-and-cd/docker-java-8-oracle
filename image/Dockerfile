@@ -55,6 +55,12 @@ RUN set -ex \
            ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/amd64/libgstreamer-lite.so \
            ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/amd64/libjavafx*.so \
            ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/jre/lib/amd64/libjfx*.so \
+    && JAVA_VERSION=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}') \
+    && echo OSX style JAVA_HOME is /Library/Java/JavaVirtualMachines/jdk${JAVA_VERSION}.jdk/Contents/Home \
+    && mkdir -p /Library/Java/JavaVirtualMachines/jdk${JAVA_VERSION}.jdk/Contents \
+    && ln -s ${JAVA_HOME} /Library/Java/JavaVirtualMachines/jdk${JAVA_VERSION}.jdk/Contents/Home \
+    && echo AppVeyor style JAVA_HOME \
+    && ln -s ${JAVA_HOME} /usr/lib/jvm/java-8-openjdk-amd64 \
     && POLICY_DIR="UnlimitedJCEPolicyJDK8" \
     && if [ ! -f /data/jce_policy-8.zip ]; then \
            ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
