@@ -11,6 +11,8 @@ ARG IMAGE_ARG_FILESERVER
 # http://download.oracle.com/otn-pub/java/jdk/8u171-b11/512cd62ec5174c3487ac17c61aaa89e8/jdk-8u171-linux-x64.tar.gz
 # http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz
 # jdk-8u171-linux-x64.tar.gz sha256: b6dd2837efaaec4109b36cfbb94a774db100029f98b0d78be68c27bec0275982 #sha256sum -c /data/jdk-8u171-linux-x64.tar.gz.sha256
+# http://ftp.osuosl.org/pub/funtoo/distfiles/oracle-java/
+# http://funtoo.neu.edu.cn/funtoo/distfiles/oracle-java/
 ARG IMAGE_ARG_JAVA8_VERSION_MINOR
 ARG IMAGE_ARG_JAVA8_VERSION_BUILD
 ARG IMAGE_ARG_JAVA8_PACKAGE
@@ -18,8 +20,7 @@ ARG IMAGE_ARG_JAVA8_PACKAGE_DIGEST
 
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
-ENV PATH ${JAVA_HOME}/bin:${PATH}
-
+ENV PATH=${JAVA_HOME}/bin:${PATH}
 
 
 COPY --from=cirepo/alpine-glibc:3.7_2.23-r3-archive /data/root /
