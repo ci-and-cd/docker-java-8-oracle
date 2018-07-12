@@ -37,3 +37,5 @@ rm -rf $(pwd)/data/image && sudo rm -f $(pwd)/data/image.tar
 
 rm -rf /data/root/data
 rm -rf /data/root/home
+rm -rf /data/root/root
+rm -rf /data/root/tmp
