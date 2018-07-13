@@ -8,7 +8,7 @@ Oracle JDK8 installed at `/usr/lib/jvm/java-8-oracle` (travis-ci style JAVA_HOME
 
 Dockerfile [ci-and-cd/docker-java-8-oracle on Github](https://github.com/ci-and-cd/docker-java-8-oracle)
 
-[cirepo/java-8-oracle on Docker Hub](https://hub.docker.com/r/cirepo/java-8-oracle/)
+[cirepo/java-oracle on Docker Hub](https://hub.docker.com/r/cirepo/java-oracle/)
 
 
 The main caveat to note is that it does use musl libc instead of glibc and friends,
@@ -22,7 +22,7 @@ so this variant is usually a very safe choice.
 ```dockerfile
 
 FROM alpine:3.7
-COPY --from=cirepo/alpine-glibc:3.7_2.23-r3-archive /data/root /
-COPY --from=cirepo/java-oracle:8u171-archive /data/root/usr/lib/jvm/java-8-oracle /usr/lib/jvm/java-8-oracle
+COPY --from=cirepo/glibc:2.23-r3-alpine-3.7-archive /data/root /
+COPY --from=cirepo/java-oracle:8u171-alpine-3.7-archive /data/root/usr/lib/jvm/java-8-oracle /usr/lib/jvm/java-8-oracle
 
 ```
