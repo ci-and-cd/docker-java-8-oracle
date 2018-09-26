@@ -11,7 +11,7 @@ if [ -n "${CI_OPT_DOCKER_REGISTRY_PASS}" ] && [ -n "${CI_OPT_DOCKER_REGISTRY_USE
 
 export IMAGE_PREFIX=${IMAGE_PREFIX:-cirepo};
 export IMAGE_NAME=${IMAGE_NAME:-java-oracle}
-export IMAGE_TAG=8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-alpine-3.7
+export IMAGE_TAG=8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-171}-alpine-3.8
 if [ "${TRAVIS_BRANCH}" != "master" ]; then export IMAGE_TAG=${IMAGE_TAG}-SNAPSHOT; fi
 
 # Build image
