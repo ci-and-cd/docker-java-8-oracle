@@ -8,6 +8,7 @@ USER root
 ARG IMAGE_ARG_FILESERVER
 
 # http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+# http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.tar.gz
 # http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz
 # http://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/jdk-8u172-linux-x64.tar.gz
 # jdk-8u181-linux-x64.tar.gz sha256: b6dd2837efaaec4109b36cfbb94a774db100029f98b0d78be68c27bec0275982 #sha256sum -c /data/jdk-8u181-linux-x64.tar.gz.sha256
@@ -32,14 +33,14 @@ COPY --chown=root:root docker /data
 RUN set -ex \
   && echo ===== Install JDK8 ===== \
   && mkdir -p $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
-  && if [ ! -f /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-181}-linux-x64.tar.gz ]; then \
+  && if [ ! -f /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-191}-linux-x64.tar.gz ]; then \
        ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
-       -d /data -o ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-181}-linux-x64.tar.gz \
-       ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jdk/8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-181}-b${IMAGE_ARG_JAVA8_VERSION_BUILD:-13}/${IMAGE_ARG_JAVA8_PACKAGE_DIGEST:-96a7b8442fe848ef90c96a2fad6ed6d1}/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-181}-linux-x64.tar.gz; \
+       -d /data -o ${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-191}-linux-x64.tar.gz \
+       ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jdk/8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-191}-b${IMAGE_ARG_JAVA8_VERSION_BUILD:-12}/${IMAGE_ARG_JAVA8_PACKAGE_DIGEST:-2787e4a523244c269598db4e85c51e0c}/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-191}-linux-x64.tar.gz; \
      fi \
-  && tar -xzf /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-181}-linux-x64.tar.gz -C $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
-  && rm -f /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-181}-linux-x64.tar.gz \
-  && mv $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle})/jdk1.8.0_${IMAGE_ARG_JAVA8_VERSION_MINOR:-181} ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle} \
+  && tar -xzf /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-191}-linux-x64.tar.gz -C $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}) \
+  && rm -f /data/${IMAGE_ARG_JAVA8_PACKAGE:-jdk}-8u${IMAGE_ARG_JAVA8_VERSION_MINOR:-191}-linux-x64.tar.gz \
+  && mv $(dirname ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle})/jdk1.8.0_${IMAGE_ARG_JAVA8_VERSION_MINOR:-191} ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle} \
   && rm -rf ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/*src.zip \
        ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/lib/missioncontrol \
        ${JAVA_HOME:-/usr/lib/jvm/java-8-oracle}/lib/visualvm \
